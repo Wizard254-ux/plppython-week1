@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Demo Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            transition: background-color 0.5s ease;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background-color: #f0f0f0;
+        }
+        .highlight {
+            background-color: #ffffcc;
+            padding: 5px;
+        }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Interactive JavaScript </h1>
+        <p>This page demonstrates dynamic content manipulation with JavaScript</p>
+    </header>
+
+    <section id="text-modification">
+        <h2>Text Content Modification</h2>
+        <p id="dynamic-text">This text will change when you click the button below.</p>
+        <button id="change-text-btn">Change Text</button>
+    </section>
+
+    <section id="style-modification">
+        <h2>Style Modification</h2>
+        <p id="style-text">This paragraph's style will change with JavaScript.</p>
+        <div>
+            <button id="change-color-btn">Change Colors</button>
+            <button id="change-size-btn">Change Size</button>
+        </div>
+    </section>
+
+    <section id="element-manipulation">
+        <h2>Element Addition/Removal</h2>
+        <div id="elements-container">
+            <p>Click the button below to add or remove list items.</p>
+        </div>
+        <button id="add-element-btn">Add Element</button>
+        <button id="remove-element-btn">Remove Element</button>
+    </section>
+
+    <footer>
+        <p>Created for demonstration purposes - Interactive JavaScript Example</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
