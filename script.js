@@ -18,71 +18,218 @@ document.addEventListener('DOMContentLoaded', function() {
         dynamicText.textContent = textOptions[textIndex];
     });
 
-    // ---- Style Modification ----
-    const styleText = document.getElementById('style-text');
-    const changeColorBtn = document.getElementById('change-color-btn');
-    const changeSizeBtn = document.getElementById('change-size-btn');
+    // ---- Tabbed Interface ----
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
     
-    const colors = ['#f0f0f0', '#ffcccc', '#ccffcc', '#ccccff', '#ffffcc'];
-    let colorIndex = 0;
-    
-    changeColorBtn.addEventListener('click', function() {
-        colorIndex = (colorIndex + 1) % colors.length;
-        styleText.style.backgroundColor = colors[colorIndex];
-        styleText.style.padding = '10px';
-        styleText.style.borderRadius = '5px';
-    });
-    
-    changeSizeBtn.addEventListener('click', function() {
-        // Toggle between normal and large text
-        if (styleText.style.fontSize === '1.5em') {
-            styleText.style.fontSize = '1em';
-            styleText.style.fontWeight = 'normal';
-        } else {
-            styleText.style.fontSize = '1.5em';
-            styleText.style.fontWeight = 'bold';
-        }
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active class from all tabs and contents
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            
+            // Show corresponding content
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+        });
     });
 
-    // ---- Element Addition/Removal ----
-    const elementsContainer = document.getElementById('elements-container');
-    const addElementBtn = document.getElementById('add-element-btn');
-    const removeElementBtn = document.getElementById('remove-element-btn');
+    // ---- Form Validation ----
+    const userForm = document.getElementById('user-form');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const ageInput = document.getElementById('age');
+    const interestsInput = document.getElementById('interests');
+    const formSuccess = document.getElementById('form-success');
     
-    // Create a ul element if it doesn't exist yet
-    let listElement = elementsContainer.querySelector('ul');
-    if (!listElement) {
-        listElement = document.createElement('ul');
-        elementsContainer.appendChild(listElement);
+    // Input event listeners for real-time validation
+    nameInput.addEventListener('input', validateName);
+    emailInput.addEventListener('input', validateEmail);
+    passwordInput.addEventListener('input', validatePassword);
+    ageInput.addEventListener('input', validateAge);
+    interestsInput.addEventListener('change', validateInterests);
+    
+    // Form submission
+    userForm.addEventListener('submit', function(event) {
+        // Prevent default form submission
+        event.preventDefault();
+        
+        // Validate all fields
+        const isNameValid = validateName();
+        const isEmailValid = validateEmail();
+        const isPasswordValid = validatePassword();
+        const isAgeValid = validateAge();
+        const isInterestsValid = validateInterests();
+        
+        // If all validations pass
+        if (isNameValid && isEmailValid && isPasswordValid && isAgeValid && isInterestsValid) {
+            // Show success message
+            formSuccess.style.display = 'block';
+            
+            // Reset form after successful submission
+            setTimeout(function() {
+                userForm.reset();
+                formSuccess.style.display = 'none';
+            }, 3000);
+        }
+    });
+    
+    // Reset button event listener
+    document.getElementById('reset-form').addEventListener('click', function() {
+        // Hide all error messages
+        const errorElements = document.querySelectorAll('.error');
+        errorElements.forEach(function(element) {
+            element.style.display = 'none';
+        });
+        
+        // Remove invalid classes
+        const inputElements = userForm.querySelectorAll('input, select');
+        inputElements.forEach(function(element) {
+            element.classList.remove('invalid');
+        });
+        
+        // Hide success message
+        formSuccess.style.display = 'none';
+    });
+    
+    // Validation functions
+    function validateName() {
+        const nameValue = nameInput.value.trim();
+        const nameError = document.getElementById('name-error');
+        
+        if (nameValue.length < 3) {
+            nameInput.classList.add('invalid');
+            nameError.style.display = 'block';
+            return false;
+        } else {
+            nameInput.classList.remove('invalid');
+            nameError.style.display = 'none';
+            return true;
+        }
     }
     
-    // Counter for new items
-    let itemCount = 0;
-    
-    addElementBtn.addEventListener('click', function() {
-        itemCount++;
-        const newItem = document.createElement('li');
-        newItem.textContent = `Item ${itemCount}`;
-        newItem.classList.add('list-item');
+    function validateEmail() {
+        const emailValue = emailInput.value.trim();
+        const emailError = document.getElementById('email-error');
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         
-        // Add a highlight effect to new elements
-        newItem.classList.add('highlight');
-        listElement.appendChild(newItem);
-        
-        // Remove highlight after a delay
-        setTimeout(function() {
-            newItem.classList.remove('highlight');
-        }, 1000);
-    });
+        if (!emailPattern.test(emailValue)) {
+            emailInput.classList.add('invalid');
+            emailError.style.display = 'block';
+            return false;
+        } else {
+            emailInput.classList.remove('invalid');
+            emailError.style.display = 'none';
+            return true;
+        }
+    }
     
-    removeElementBtn.addEventListener('click', function() {
-        const items = listElement.querySelectorAll('li');
-        if (items.length > 0) {
-            // Remove the last item
-            listElement.removeChild(items[items.length - 1]);
+    function validatePassword() {
+        const passwordValue = passwordInput.value;
+        const passwordError = document.getElementById('password-error');
+        const hasLetters = /[a-zA-Z]/.test(passwordValue);
+        const hasNumbers = /\d/.test(passwordValue);
+        
+        if (passwordValue.length < 8 || !hasLetters || !hasNumbers) {
+            passwordInput.classList.add('invalid');
+            passwordError.style.display = 'block';
+            return false;
+        } else {
+            passwordInput.classList.remove('invalid');
+            passwordError.style.display = 'none';
+            return true;
+        }
+    }
+    
+    function validateAge() {
+        const ageValue = ageInput.value;
+        const ageError = document.getElementById('age-error');
+        
+        if (ageValue === '' || ageValue < 18 || ageValue > 120) {
+            ageInput.classList.add('invalid');
+            ageError.style.display = 'block';
+            return false;
+        } else {
+            ageInput.classList.remove('invalid');
+            ageError.style.display = 'none';
+            return true;
+        }
+    }
+    
+    function validateInterests() {
+        const interestsValue = interestsInput.value;
+        const interestsError = document.getElementById('interests-error');
+        
+        if (interestsValue === '') {
+            interestsInput.classList.add('invalid');
+            interestsError.style.display = 'block';
+            return false;
+        } else {
+            interestsInput.classList.remove('invalid');
+            interestsError.style.display = 'none';
+            return true;
+        }
+    }
+
+    // ---- Interactive Color Picker ----
+    const redSlider = document.getElementById('red');
+    const greenSlider = document.getElementById('green');
+    const blueSlider = document.getElementById('blue');
+    
+    const redValue = document.getElementById('red-value');
+    const greenValue = document.getElementById('green-value');
+    const blueValue = document.getElementById('blue-value');
+    
+    const colorPreview = document.getElementById('color-preview');
+    const rgbValue = document.getElementById('rgb-value');
+    
+    // Function to update color preview
+    function updateColorPreview() {
+        const red = redSlider.value;
+        const green = greenSlider.value;
+        const blue = blueSlider.value;
+        
+        const rgbString = `rgb(${red}, ${green}, ${blue})`;
+        
+        // Update color preview and text
+        colorPreview.style.backgroundColor = rgbString;
+        rgbValue.textContent = rgbString;
+        
+        // Update slider value labels
+        redValue.textContent = red;
+        greenValue.textContent = green;
+        blueValue.textContent = blue;
+    }
+    
+    // Add event listeners to sliders
+    redSlider.addEventListener('input', updateColorPreview);
+    greenSlider.addEventListener('input', updateColorPreview);
+    blueSlider.addEventListener('input', updateColorPreview);
+    
+    // Initialize color preview on page load
+    updateColorPreview();
+
+    // Add keyboard event listeners for accessibility
+    document.addEventListener('keydown', function(event) {
+        // Press 'Escape' to reset the form
+        if (event.key === 'Escape') {
+            document.getElementById('reset-form').click();
         }
     });
 
-    
-    
+    // Add mouseover event listeners for additional interactivity
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.addEventListener('mouseover', function() {
+            this.style.backgroundColor = '#e6e6e6';
+        });
+        
+        button.addEventListener('mouseout', function() {
+            this.style.backgroundColor = '#f0f0f0';
+        });
+    });
 });

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Demo Page</title>
+    <title>Interactive Form Demo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,6 +34,88 @@
             background-color: #ffffcc;
             padding: 5px;
         }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .error {
+            color: #ff0000;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+        input.invalid {
+            border-color: #ff0000;
+        }
+        .success-message {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            background-color: #f5f5f5;
+            margin-right: 5px;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+        }
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 4px 4px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
         footer {
             margin-top: 40px;
             text-align: center;
@@ -44,8 +126,8 @@
 </head>
 <body>
     <header>
-        <h1>Interactive JavaScript </h1>
-        <p>This page demonstrates dynamic content manipulation with JavaScript</p>
+        <h1>Interactive Form Validation Demo</h1>
+        <p>This page demonstrates interactive form validation and DOM manipulation with JavaScript</p>
     </header>
 
     <section id="text-modification">
@@ -54,26 +136,101 @@
         <button id="change-text-btn">Change Text</button>
     </section>
 
-    <section id="style-modification">
-        <h2>Style Modification</h2>
-        <p id="style-text">This paragraph's style will change with JavaScript.</p>
-        <div>
-            <button id="change-color-btn">Change Colors</button>
-            <button id="change-size-btn">Change Size</button>
+    <section id="tabbed-content">
+        <h2>Tabbed Interface</h2>
+        <div class="tabs">
+            <div class="tab active" data-tab="tab1">Tab 1</div>
+            <div class="tab" data-tab="tab2">Tab 2</div>
+            <div class="tab" data-tab="tab3">Tab 3</div>
+        </div>
+        <div id="tab1" class="tab-content active">
+            <h3>First Tab Content</h3>
+            <p>This is the content of the first tab. Click on the tabs above to switch between different content panels.</p>
+        </div>
+        <div id="tab2" class="tab-content">
+            <h3>Second Tab Content</h3>
+            <p>Here's some different content in the second tab. The tabs are controlled via JavaScript event listeners.</p>
+        </div>
+        <div id="tab3" class="tab-content">
+            <h3>Third Tab Content</h3>
+            <p>And finally, the third tab content is here. This tabbed interface is a common UI pattern on websites.</p>
         </div>
     </section>
 
-    <section id="element-manipulation">
-        <h2>Element Addition/Removal</h2>
-        <div id="elements-container">
-            <p>Click the button below to add or remove list items.</p>
+    <section id="form-validation">
+        <h2>Form Validation</h2>
+        <form id="user-form">
+            <div class="form-group">
+                <label for="name">Name <span class="tooltip">?<span class="tooltip-text">Enter your full name (first and last)</span></span></label>
+                <input type="text" id="name" name="name" placeholder="Enter your name">
+                <div class="error" id="name-error">Name is required and must be at least 3 characters</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email <span class="tooltip">?<span class="tooltip-text">Enter a valid email address</span></span></label>
+                <input type="email" id="email" name="email" placeholder="Enter your email">
+                <div class="error" id="email-error">Please enter a valid email address</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password <span class="tooltip">?<span class="tooltip-text">Must be at least 8 characters with letters and numbers</span></span></label>
+                <input type="password" id="password" name="password" placeholder="Create a password">
+                <div class="error" id="password-error">Password must be at least 8 characters and include letters and numbers</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" min="18" max="120" placeholder="Enter your age">
+                <div class="error" id="age-error">Age must be between 18 and 120</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="interests">Interests</label>
+                <select id="interests" name="interests">
+                    <option value="">Select an option</option>
+                    <option value="technology">Technology</option>
+                    <option value="sports">Sports</option>
+                    <option value="art">Art</option>
+                    <option value="music">Music</option>
+                    <option value="travel">Travel</option>
+                </select>
+                <div class="error" id="interests-error">Please select an interest</div>
+            </div>
+            
+            <button type="submit" id="submit-form">Submit</button>
+            <button type="reset" id="reset-form">Reset</button>
+        </form>
+        
+        <div class="success-message" id="form-success">
+            Form submitted successfully! Thank you for your submission.
         </div>
-        <button id="add-element-btn">Add Element</button>
-        <button id="remove-element-btn">Remove Element</button>
+    </section>
+
+    <section id="interactive-element">
+        <h2>Interactive Color Picker</h2>
+        <p>Use the sliders below to create a custom color:</p>
+        
+        <div class="form-group">
+            <label for="red">Red: <span id="red-value">128</span></label>
+            <input type="range" id="red" min="0" max="255" value="128">
+        </div>
+        
+        <div class="form-group">
+            <label for="green">Green: <span id="green-value">128</span></label>
+            <input type="range" id="green" min="0" max="255" value="128">
+        </div>
+        
+        <div class="form-group">
+            <label for="blue">Blue: <span id="blue-value">128</span></label>
+            <input type="range" id="blue" min="0" max="255" value="128">
+        </div>
+        
+        <div id="color-preview" style="height: 100px; border: 1px solid #ddd; margin-top: 15px; background-color: rgb(128, 128, 128);"></div>
+        <p>RGB Value: <span id="rgb-value">rgb(128, 128, 128)</span></p>
     </section>
 
     <footer>
-        <p>Created for demonstration purposes - Interactive JavaScript Example</p>
+        <p>Created for demonstration purposes - Interactive JavaScript Form Validation Example</p>
     </footer>
 
     <script src="script.js"></script>
